@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/massemanet/redbug.svg?branch=master)](https://travis-ci.org/massemanet/redbug)
-
+![Redbug OpenRiak Status](https://github.com/OpenRiak/redbug/actions/workflows/erlang.yml/badge.svg?branch=openriak-3.2)
 
 # DESCRIPTION
 
