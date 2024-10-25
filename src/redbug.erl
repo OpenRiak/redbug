@@ -172,8 +172,14 @@ handle_args([Trc | Rest], Config = #cnf{trc = Trcs}) ->
     handle_args(Rest, Config#cnf{trc = Trcs++[trc(Trc)]}).
 
 start_distribution(Cnf) ->
-    DistOptions = #{name => random_node_name(), name_domain => name_domain(Cnf), hidden => true},
-    {ok, _} = net_kernel:start(DistOptions),
+    NameDomain = name_domain(Cnf),
+    DistOptions = case list_to_integer(erlang:system_info(otp_release)) of
+        Rel when Rel >= 25 ->
+            #{name_domain => NameDomain, hidden => true};
+        _ ->
+            #{name_domain => NameDomain}
+    end,
+    {ok, _} = net_kernel:start(random_node_name(), DistOptions),
     assert_cookie(Cnf).
 
 random_node_name() ->
@@ -340,7 +346,11 @@ stop(Target) ->
 start(RTPs) ->
     start(RTPs, []).
 
--spec start(RTPs::list(), Opts::map()) -> {Procs::integer(), Functions::integer()}.
+-type start_rtp() :: 'send' | 'receive' | nonempty_string().
+-type start_rtps() :: start_rtp() | list(start_rtp()).
+-type start_opts() :: #{atom() => term()} | list(atom() | {atom(), term()}).
+-type start_result() :: atom() | tuple().
+-spec start(RTPs::start_rtps(), Opts::start_opts()) -> start_result().
 
 start('send', Props)    -> start([send], Props);
 start('receive', Props) -> start(['receive'], Props);
