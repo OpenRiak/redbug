@@ -5,6 +5,8 @@
    [start_peer/0,
     stop_peer/2]).
 
+-if(?OTP_RELEASE >= 25).
+
 -include_lib("eunit/include/eunit.hrl").
 -include_lib("kernel/include/file.hrl").
 
@@ -81,6 +83,9 @@ runner(Tracer, Action) ->
     ok = stop_peer(Peer, PeerNodeName),
     Pid ! {pid, self()},
     receive {res, X} -> X after 1000 -> timeout end.
+
+
+-endif.
 
 start_peer() ->
     [start_dist(eunit_master) || node() =:= nonode@nohost],

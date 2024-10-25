@@ -171,10 +171,16 @@ handle_args([Trc | Rest], Config = #cnf{trc = Trcs}) ->
     %% Any following non-option arguments are trace patterns.
     handle_args(Rest, Config#cnf{trc = Trcs++[trc(Trc)]}).
 
+-if(?OTP_RELEASE >= 25).
 start_distribution(Cnf) ->
-    DistOptions = #{name => random_node_name(), name_domain => name_domain(Cnf), hidden => true},
-    {ok, _} = net_kernel:start(DistOptions),
+    DistOptions = #{name_domain => name_domain(Cnf), hidden => true},
+    {ok, _} = net_kernel:start(random_node_name(), DistOptions),
     assert_cookie(Cnf).
+-else.
+start_distribution(Cnf) ->
+    {ok, _} = net_kernel:start([random_node_name(), name_domain(Cnf)]),
+    assert_cookie(Cnf).
+-endif.
 
 random_node_name() ->
     list_to_atom("redbug-" ++ integer_to_list(rand:uniform(1000000000))).
@@ -339,8 +345,6 @@ stop(Target) ->
 %% @equiv start(RTPs, [])
 start(RTPs) ->
     start(RTPs, []).
-
--spec start(RTPs::list(), Opts::map()) -> {Procs::integer(), Functions::integer()}.
 
 start('send', Props)    -> start([send], Props);
 start('receive', Props) -> start(['receive'], Props);
