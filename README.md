@@ -1,4 +1,4 @@
-![Redbug OpenRiak Status](https://github.com/OpenRiak/redbug/actions/workflows/erlang.yml/badge.svg?branch=openriak-3.2)
+![Redbug OpenRiak Status](https://github.com/OpenRiak/redbug/actions/workflows/erlang.yml/badge.svg?branch=openriak-3.4)
 
 # DESCRIPTION
 
