@@ -1,4 +1,7 @@
-REBAR = rebar3
+# since we are (principally) a dependency app of riak, we usually are
+# built by the top-level rebar3, of a specific version, so let's find
+# it in the usual location.
+REBAR ?= ../riak/rebar3
 
 .PHONY: all compile escriptize test clean
 .PHONY: test eunit xref dialyze
